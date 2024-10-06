@@ -15,10 +15,11 @@ db_conn = psycopg.connect(POSTGRES_URI)
 @celery_app.task
 def save_res_to_db(url, ctx, content):
     with db_conn.cursor() as cur:
-        x = cur.execute("""INSERT INTO res (url, ctx, content) VALUES (%s, %s, %s);""", (url, Json(ctx), content))
-        print(x)
+        cur.execute("""INSERT INTO res (url, ctx, content) VALUES (%s, %s, %s);""", (url, Json(ctx), content))
+        db_conn.commit()
 
 @celery_app.task
 def save_err_to_db(url, ctx, error):
-    cur = db_conn.cursor()
-    cur.execute("""INSERT INTO err (url, ctx, error) VALUES (%s, %s, %s);""", (url, Json(ctx), error))
+    with db_conn.cursor() as cur:
+        cur.execute("""INSERT INTO err (url, ctx, error) VALUES (%s, %s, %s);""", (url, Json(ctx), error))
+        db_conn.commit()

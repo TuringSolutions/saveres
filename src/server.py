@@ -24,3 +24,12 @@ async def save_err(err_data : ErrData, response: Response):
     save_err_to_db.delay(url = err_data.url, ctx = err_data.ctx, error= err_data.error)
     response.status_code = 202
     return None
+
+@app.get("/ping")
+async def ping():
+    return "pong"
+
+@app.post("/mirror")
+async def mirror(body: BaseModel):
+    print(body)
+    return None

@@ -31,5 +31,5 @@ async def ping():
 
 @app.post("/mirror")
 async def mirror(body: BaseModel):
-    print(body)
+    print(f"Body is : {body}")
     return None

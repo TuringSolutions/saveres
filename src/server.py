@@ -3,12 +3,12 @@ from pydantic import BaseModel
 from task import save_err_to_db, save_res_to_db
 class ResData(BaseModel):
     url: str
-    ctx: dict | str
+    ctx: dict
     content : str
 
 class ErrData(BaseModel):
     url: str
-    ctx: dict | str
+    ctx: dict
     error : str
 
 app = FastAPI()

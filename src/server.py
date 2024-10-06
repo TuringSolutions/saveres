@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
 from task import save_err_to_db, save_res_to_db
+from typing import Any
+
 class ResData(BaseModel):
     url: str
     ctx: dict
-    content : str
+    content : Any
 
 class ErrData(BaseModel):
     url: str
@@ -30,6 +32,6 @@ async def ping():
     return "pong"
 
 @app.post("/mirror")
-async def mirror(body: BaseModel):
+async def mirror(body: ResData):
     print(f"Body is : {body}")
     return None

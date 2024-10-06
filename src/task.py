@@ -2,6 +2,7 @@ from celery import Celery
 from os import getenv
 import psycopg
 import json
+from psycopg.types.json import Json
 
 REDIS_URI = getenv('REDIS_URI')
 REDIS_BACKEND_DBINDEX = getenv('REDIS_BACKEND_DBINDEX')
@@ -14,9 +15,9 @@ db_conn = psycopg.connect(POSTGRES_URI)
 @celery_app.task
 def save_res_to_db(url, ctx, content):
     cur = db_conn.cursor()
-    cur.execute("""INSERT INTO res (url, ctx, content) VALUES (%s, %s, %s);""", (url, ctx, content))
+    cur.execute("""INSERT INTO res (url, ctx, content) VALUES (%s, %s, %s);""", (url, Json(ctx), content))
 
 @celery_app.task
 def save_err_to_db(url, ctx, error):
     cur = db_conn.cursor()
-    cur.execute("""INSERT INTO err (url, ctx, error) VALUES (%s, %s, %s);""", (url, ctx, error))
+    cur.execute("""INSERT INTO err (url, ctx, error) VALUES (%s, %s, %s);""", (url, Json(ctx), error))

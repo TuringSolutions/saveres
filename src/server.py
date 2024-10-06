@@ -15,7 +15,7 @@ class ErrData(BaseModel):
 
 app = FastAPI()
 
-@app.post("/data")
+@app.post("/res")
 async def save_data(res_data : ResData, response: Response):
     save_res_to_db.delay(url = res_data.url, ctx = res_data.ctx, content= res_data.content)
     response.status_code = 202

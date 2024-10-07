@@ -17,6 +17,7 @@ def save_res_to_db(url, ctx, content):
     db_conn.set_autocommit(True)
     with db_conn.cursor() as cur:
         cur.execute("""INSERT INTO res (url, ctx, content) VALUES (%s, %s, %s);""", (url, Json(ctx), content))
+    db_conn.close()
 
 @celery_app.task
 def save_err_to_db(url, ctx, error):
@@ -24,3 +25,4 @@ def save_err_to_db(url, ctx, error):
     db_conn.set_autocommit(True)
     with db_conn.cursor() as cur:
         cur.execute("""INSERT INTO err (url, ctx, error) VALUES (%s, %s, %s);""", (url, Json(ctx), error))
+    db_conn.close()

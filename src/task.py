@@ -11,7 +11,7 @@ POSTGRES_URI = str(getenv('POSTGRES_URI'))
 
 celery_app = Celery(main="saveres", broker=f"{REDIS_URI}/{REDIS_BROKER_DBINDEX}", backend=f"{REDIS_URI}/{REDIS_BACKEND_DBINDEX}")
 
-@celery_app.task
+@celery_app.task(ignore_result=True)
 def save_res_to_db(url, ctx, content):
     db_conn = psycopg.connect(POSTGRES_URI)
     db_conn.set_autocommit(True)
@@ -19,7 +19,7 @@ def save_res_to_db(url, ctx, content):
         cur.execute("""INSERT INTO res (url, ctx, content) VALUES (%s, %s, %s);""", (url, Json(ctx), content))
     db_conn.close()
 
-@celery_app.task
+@celery_app.task(ignore_result=True)
 def save_err_to_db(url, ctx, error):
     db_conn = psycopg.connect(POSTGRES_URI)
     db_conn.set_autocommit(True)

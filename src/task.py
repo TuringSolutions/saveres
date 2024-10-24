@@ -20,6 +20,15 @@ def save_res_to_db(url, ctx, content):
     db_conn.close()
 
 @celery_app.task(ignore_result=True)
+def save_mro_to_db(url, domain, details):
+    db_conn = psycopg.connect(POSTGRES_URI)
+    db_conn.set_autocommit(True)
+    with db_conn.cursor() as cur:
+        cur.execute("""INSERT INTO mro (url, domain, details) VALUES (%s, %s, %s);""", (url, domain, Json(details)))
+    db_conn.close()
+
+
+@celery_app.task(ignore_result=True)
 def save_err_to_db(url, ctx, error):
     db_conn = psycopg.connect(POSTGRES_URI)
     db_conn.set_autocommit(True)
